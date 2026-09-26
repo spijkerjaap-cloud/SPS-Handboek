@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e9dcc8">
+  <title>SPS Scroll World</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="worldCanvas" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#start" aria-label="SPS Scroll World">
+      <span class="brand-mark">S</span>
+      <span>
+        <strong>SPS Scroll World</strong>
+        <small>handboek in beelden</small>
+      </span>
+    </a>
+    <nav class="topnav" aria-label="Hoofdroute">
+      <a href="#route">Route</a>
+      <a href="#bibliotheek">Bibliotheek</a>
+      <a href="#zoeken">Zoeken</a>
+    </nav>
+  </header>
+
+  <aside class="rail" aria-label="Scroll hoofdstukken">
+    <a class="active" href="#start" aria-label="Start"></a>
+    <a href="#screening" aria-label="Screening"></a>
+    <a href="#sedatie" aria-label="Sedatie"></a>
+    <a href="#bewaking" aria-label="Bewaking"></a>
+    <a href="#complicaties" aria-label="Complicaties"></a>
+    <a href="#specialismen" aria-label="Specialismen"></a>
+    <a href="#portfolio" aria-label="Portfolio"></a>
+  </aside>
+
+  <main>
+    <section class="hero panel" id="start" data-scene="0">
+      <div class="copy">
+        <p class="eyebrow">SPS handboek</p>
+        <h1>Een leerwereld voor veilige procedurele sedatie.</h1>
+        <p>De inhoud uit je handboek is omgebouwd naar een rustige scrollreis: eerst begrijpen, dan verdiepen, daarna snel terugvinden in de volledige protocollen.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#route">Start de route</a>
+          <a class="button" href="#zoeken">Zoek protocol</a>
+        </div>
+      </div>
+      <div class="scene-card large" aria-label="Klei-matte behandelkamer met SPS, monitor en patiënt">
+        <div class="room">
+          <span class="wall back"></span><span class="wall left"></span><span class="wall floor"></span>
+          <span class="bed"></span><span class="patient"></span><span class="clinician"></span>
+          <span class="monitor"><i></i></span><span class="cart"></span><span class="lamp"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-intro" id="route">
+      <p class="eyebrow">De route</p>
+      <h2>Van voorbereiding naar ontslag, met de protocollen eromheen.</h2>
+    </section>
+
+    <section class="panel" id="screening" data-scene="1">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-screening">
+            <span class="clipboard"></span><span class="airway"></span><span class="asa"></span><span class="check a"></span><span class="check b"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">01 / Vooraf</p>
+        <h2>Screening is de veiligheidskaart.</h2>
+        <p>Je verzamelt de voorgeschiedenis, beoordeelt ASA-klasse en luchtweg, bespreekt risico's met de supervisor en bepaalt of PSA door de SPS passend is.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>Eerst kijk je of deze patiënt en deze ingreep samen veilig genoeg zijn. Als er rode vlaggen zijn, gaat de anesthesioloog eerder en duidelijker mee in de beslissing.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel flip" id="sedatie" data-scene="2">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-sedation">
+            <span class="syringe"></span><span class="drop one"></span><span class="drop two"></span><span class="wave"></span><span class="team"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">02 / Tijdens</p>
+        <h2>Procedurele sedatie vraagt ritme en overzicht.</h2>
+        <p>De SPS geeft hypnotica en analgetica volgens behandelplan, bewaakt het sedatieniveau en blijft vooruitdenken: ademweg, circulatie, comfort en procedureverloop.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>Je stuurt niet alleen op slaap. Je kijkt steeds of de patiënt nog veilig ademt, goed reageert op de procedure en snel geholpen kan worden als de situatie kantelt.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" id="bewaking" data-scene="3">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-monitoring">
+            <span class="screen"><i></i><b></b></span><span class="pulse"></span><span class="oxygen"></span><span class="clock"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">03 / Bewaking</p>
+        <h2>Meten, kijken, vastleggen.</h2>
+        <p>Bewaking stopt niet bij de procedure. Het handboek beschrijft registratie, monitoring tijdens en na PSA, post-sedatie observatie en ontslagcriteria.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>De monitor geeft cijfers, maar jij ziet het geheel. Pas als bewustzijn, ademhaling, circulatie, pijn en misselijkheid voldoende hersteld zijn, komt ontslag in beeld.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel flip" id="complicaties" data-scene="4">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-complications">
+            <span class="warning"></span><span class="airbag"></span><span class="flow a"></span><span class="flow b"></span><span class="phone"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">04 / Als het verandert</p>
+        <h2>Complicaties zijn een workflow, geen verrassing.</h2>
+        <p>Bij luchtwegproblemen, hypoxie, circulatoire instabiliteit of PONV is het belangrijk dat interventies, hulp inschakelen en verslaglegging helder verlopen.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>Je hoeft niet te wachten tot iets groot wordt. Herkennen, benoemen, handelen en opschalen horen bij hetzelfde patroon.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" id="specialismen" data-scene="5">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-specialties">
+            <span class="tile mdl">MDL</span><span class="tile cardio">♥</span><span class="tile long">O₂</span><span class="tile pain">P</span><span class="path"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">05 / Vakprotocollen</p>
+        <h2>Elke afdeling heeft eigen accenten.</h2>
+        <p>MDL, interventieradiologie, longgeneeskunde, cardiologie, pijngeneeskunde, fertiliteit, gynaecologie, KNO en meer staan als volledige protocollen in de bibliotheek.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>De basis blijft hetzelfde, maar de risico's verschillen per procedure. Daarom kun je per specialisme snel naar afspraken, voorbereiding en bijzonderheden.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel flip" id="portfolio" data-scene="6">
+      <div class="visual">
+        <div class="scene-card">
+          <div class="figure-portfolio">
+            <span class="book"></span><span class="epa one">EPA</span><span class="epa two">KPE</span><span class="epa three">CBD</span><span class="spark"></span>
+          </div>
+        </div>
+      </div>
+      <article class="copy">
+        <p class="eyebrow">06 / Opleiding</p>
+        <h2>Bekwaam worden maak je zichtbaar.</h2>
+        <p>Het portfolio bundelt praktijkuren, sedaties, KPE's, CBD's, reflectie, producten, 360 graden feedback en EPA-overstijgende leeractiviteiten.</p>
+        <div class="explainer">
+          <strong>In gewone taal</strong>
+          <p>Je laat niet alleen zien wat je hebt gedaan, maar vooral hoe zelfstandig, veilig en reflectief je groeit in de rol van SPS.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="library" id="bibliotheek">
+      <div class="section-head">
+        <p class="eyebrow">Bibliotheek</p>
+        <h2>Alle hoofdstukken uit het handboek.</h2>
+        <p class="section-lead">Gebruik de knoppen om snel naar een type onderwerp te springen. Elke kaart opent direct het volledige protocol of portfolio-onderdeel.</p>
+      </div>
+      <div class="library-tools" aria-label="Bibliotheekfilters">
+        <button class="filter-btn active" type="button" data-filter="all">Alles</button>
+        <button class="filter-btn" type="button" data-filter="handboek">Handboek</button>
+        <button class="filter-btn" type="button" data-filter="praktijk">Opleiding</button>
+        <button class="filter-btn" type="button" data-filter="protocol">Protocollen</button>
+        <button class="filter-btn" type="button" data-filter="portfolio">Portfolio</button>
+        <span id="libraryCount" class="library-count"></span>
+      </div>
+      <div id="chapterGrid" class="chapter-grid"></div>
+    </section>
+
+    <section class="search-zone" id="zoeken">
+      <div class="section-head">
+        <p class="eyebrow">Zoeken</p>
+        <h2>Vind snel protocoltekst, bijlage of portfolio-onderdeel.</h2>
+      </div>
+      <label class="searchbox">
+        <span>Zoekterm</span>
+        <input id="searchInput" type="search" placeholder="Bijvoorbeeld: ASA, PONV, ERCP, luchtweg, KPE">
+      </label>
+      <div class="search-tools" aria-label="Zoekfilters">
+        <button class="filter-btn active" type="button" data-search-filter="all">Alles</button>
+        <button class="filter-btn" type="button" data-search-filter="handboek">Handboek</button>
+        <button class="filter-btn" type="button" data-search-filter="praktijk">Opleiding</button>
+        <button class="filter-btn" type="button" data-search-filter="protocol">Protocollen</button>
+      </div>
+      <div id="results" class="results"></div>
+    </section>
+  </main>
+
+  <dialog id="detailDialog">
+    <button class="close" type="button" id="closeDialog" aria-label="Sluiten">×</button>
+    <div class="detail-layout">
+      <aside id="detailVisual" class="detail-visual" aria-label="Beeldende uitleg"></aside>
+      <article class="detail-copy">
+        <p class="eyebrow" id="detailContext"></p>
+        <h2 id="detailTitle"></h2>
+        <div id="detailBody" class="detail-body"></div>
+      </article>
+    </div>
+  </dialog>
+
+  <script src="assets/sps-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
