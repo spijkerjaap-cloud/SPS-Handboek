@@ -26,14 +26,14 @@
   const closeDialog = document.getElementById("closeDialog");
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const palette = ["#6d9277", "#6ca8a4", "#7895c3", "#c8897e", "#d9a657", "#fff7ec"];
+  const palette = ["#5f8c78", "#4c9aa0", "#5f7fa8", "#b06f69", "#c7994d", "#fff9ef"];
   const islands = [
-    { x: .68, y: .54, r: 155, color: "#d8bb95" },
-    { x: .29, y: .42, r: 92, color: "#c7d4bd" },
-    { x: .51, y: .27, r: 76, color: "#d9a657" },
-    { x: .78, y: .27, r: 72, color: "#c8897e" },
-    { x: .21, y: .68, r: 80, color: "#7895c3" },
-    { x: .48, y: .74, r: 88, color: "#6ca8a4" }
+    { x: .68, y: .54, r: 155, color: "#d5c4a6" },
+    { x: .29, y: .42, r: 92, color: "#c9d8d3" },
+    { x: .51, y: .27, r: 76, color: "#c7994d" },
+    { x: .78, y: .27, r: 72, color: "#b06f69" },
+    { x: .21, y: .68, r: 80, color: "#5f7fa8" },
+    { x: .48, y: .74, r: 88, color: "#4c9aa0" }
   ];
 
   let width = 0;
@@ -109,50 +109,50 @@
   function visualModel(kind) {
     const models = {
       screening: {
-        title: "Screeningkaart",
-        text: "Patiënt, ingreep en risico's worden eerst bij elkaar gelegd.",
-        labels: ["ASA", "luchtweg", "supervisor"],
+        title: "Screeningbesluit",
+        text: "Patiënt, ingreep, ASA, luchtweg en supervisor vormen samen het startbesluit.",
+        labels: ["ASA", "luchtweg", "overleg"],
         icon: `<span class="v-clipboard"></span><span class="v-airway"></span><span class="v-check one"></span><span class="v-check two"></span>`
       },
       sedation: {
-        title: "Sedatiepad",
-        text: "Medicatie, comfort en ademweg lopen tijdens de procedure samen.",
-        labels: ["plan", "titraties", "comfort"],
+        title: "Sedatiecyclus",
+        text: "Plan maken, medicatie titreren, effect beoordelen en opnieuw bijsturen.",
+        labels: ["plan", "titreren", "observeren"],
         icon: `<span class="v-syringe"></span><span class="v-drop one"></span><span class="v-drop two"></span><span class="v-wave"></span>`
       },
       monitor: {
-        title: "Bewakingsbeeld",
-        text: "Cijfers, klinische blik en verslaglegging vormen een doorlopend beeld.",
-        labels: ["SpO2", "RR", "ontslag"],
+        title: "Bewakingslus",
+        text: "Monitorwaarden, klinische indruk, overdracht en ontslagcriteria blijven verbonden.",
+        labels: ["SpO2", "kliniek", "ontslag"],
         icon: `<span class="v-screen"><i></i></span><span class="v-clock"></span><span class="v-oxygen">O2</span>`
       },
       complication: {
         title: "Opschaalroute",
-        text: "Herkennen, handelen en hulp inschakelen horen bij één workflow.",
+        text: "Vroege signalen koppelen aan handelen, hulp vragen en vastleggen.",
         labels: ["herken", "handel", "bel"],
         icon: `<span class="v-warning">!</span><span class="v-flow a"></span><span class="v-flow b"></span><span class="v-phone"></span>`
       },
       specialty: {
-        title: "Procedurekamer",
-        text: "De basis blijft gelijk; per specialisme verschuiven de aandachtspunten.",
-        labels: ["MDL", "cardio", "long"],
+        title: "Procedureprotocol",
+        text: "Per specialisme zie je procedureverloop, risico's en nazorgafspraken.",
+        labels: ["procedure", "risico", "nazorg"],
         icon: `<span class="v-tile a">MDL</span><span class="v-tile b">O2</span><span class="v-tile c">P</span><span class="v-path"></span>`
       },
       portfolio: {
-        title: "Leerlijn",
-        text: "Praktijkuren, feedback en EPA's maken groei zichtbaar.",
-        labels: ["EPA", "KPE", "CBD"],
+        title: "Bekwaamheidsroute",
+        text: "Praktijkuren, observaties, feedback en EPA's laten groei zien.",
+        labels: ["uren", "KPE", "EPA"],
         icon: `<span class="v-book"></span><span class="v-badge a">EPA</span><span class="v-badge b">KPE</span><span class="v-badge c">CBD</span>`
       },
       overview: {
-        title: "Handboekkaart",
-        text: "Gebruik dit onderdeel als naslag en koppel het aan de route.",
-        labels: ["lees", "begrijp", "pas toe"],
+        title: "Naslagkaart",
+        text: "Elk onderdeel is gekoppeld aan leren, terugvinden en toepassen.",
+        labels: ["leer", "zoek", "pas toe"],
         icon: `<span class="v-book"></span><span class="v-clipboard small"></span><span class="v-check one"></span>`
       },
       organization: {
-        title: "Organogram",
-        text: "Wie is waarvoor bereikbaar binnen de SPS-organisatie.",
+        title: "Bereikbaarheidskaart",
+        text: "Rollen, namen en achterwacht staan bij elkaar als praktische contactkaart.",
         labels: ["rollen", "namen", "bereikbaarheid"],
         icon: `<span class="v-org top"></span><span class="v-org mid a"></span><span class="v-org mid b"></span><span class="v-org line one"></span><span class="v-org line two"></span><span class="v-phone org"></span>`
       }
@@ -344,9 +344,9 @@
   function drawWorld() {
     ctx.clearRect(0, 0, width, height);
     const bg = ctx.createLinearGradient(0, 0, width, height);
-    bg.addColorStop(0, "#e7d8c1");
-    bg.addColorStop(.55, "#f6ead9");
-    bg.addColorStop(1, "#d9e4d4");
+    bg.addColorStop(0, "#e4edf0");
+    bg.addColorStop(.52, "#f7f2e9");
+    bg.addColorStop(1, "#d8e2d8");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, width, height);
 
@@ -381,9 +381,9 @@
     ctx.restore();
 
     const wash = ctx.createLinearGradient(0, 0, width * .8, 0);
-    wash.addColorStop(0, "rgba(233,220,200,.86)");
-    wash.addColorStop(.58, "rgba(233,220,200,.38)");
-    wash.addColorStop(1, "rgba(233,220,200,0)");
+    wash.addColorStop(0, "rgba(230,238,240,.88)");
+    wash.addColorStop(.58, "rgba(247,242,233,.42)");
+    wash.addColorStop(1, "rgba(230,238,240,0)");
     ctx.fillStyle = wash;
     ctx.fillRect(0, 0, width, height);
   }

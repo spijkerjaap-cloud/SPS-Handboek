@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#e9dcc8">
+  <meta name="theme-color" content="#e6eef0">
   <title>SPS Scroll World</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <canvas id="worldCanvas" aria-hidden="true"></canvas>
@@ -18,7 +18,7 @@
       <span class="brand-mark">S</span>
       <span>
         <strong>SPS Scroll World</strong>
-        <small>handboek in beelden</small>
+        <small>leren · scrollen · opzoeken</small>
       </span>
     </a>
     <nav class="topnav" aria-label="Hoofdroute">
@@ -43,11 +43,11 @@
     <section class="hero panel" id="start" data-scene="0">
       <div class="copy">
         <p class="eyebrow">SPS handboek</p>
-        <h1>Een leerwereld voor veilige procedurele sedatie.</h1>
-        <p>De inhoud uit je handboek is omgebouwd naar een rustige scrollreis: eerst begrijpen, dan verdiepen, daarna snel terugvinden in de volledige protocollen.</p>
+        <h1>Leer de SPS-route alsof je meeloopt in de praktijk.</h1>
+        <p>Van screening tot ontslag: scroll door de zorgroute, zie per stap waar je op let en spring daarna direct naar het protocol dat je nodig hebt.</p>
         <div class="hero-actions">
           <a class="button primary" href="#route">Start de route</a>
-        <a class="button" href="#zoeken">Open naslag</a>
+          <a class="button" href="#zoeken">Open naslag</a>
         </div>
       </div>
       <div class="scene-card large" aria-label="Klei-matte behandelkamer met SPS, monitor en patiënt">
@@ -61,7 +61,24 @@
 
     <section class="chapter-intro" id="route">
       <p class="eyebrow">De route</p>
-      <h2>Van voorbereiding naar ontslag, met de protocollen eromheen.</h2>
+      <h2>Eerst het zorgproces begrijpen, daarna gericht protocollen vinden.</h2>
+      <div class="starter-path" aria-label="Leerroute voor beginnende SPS'ers">
+        <article>
+          <span>1</span>
+          <strong>Oriënteer</strong>
+          <p>Volg de scrollroute en koppel elke stap aan het moment waarop je hem in de praktijk tegenkomt.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <strong>Verdiep</strong>
+          <p>Open hoofdstukken wanneer je de afspraken, risico's of bijzonderheden precies wilt nalezen.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <strong>Zoek terug</strong>
+          <p>Gebruik Naslag om per hoofdstuk, specialisme of afkorting snel de juiste tekst te vinden.</p>
+        </article>
+      </div>
       <nav class="contents" aria-label="Inhoudsopgave">
         <h3>Inhoudsopgave</h3>
         <ol>
@@ -88,11 +105,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">01 / Vooraf</p>
-        <h2>Screening is de veiligheidskaart.</h2>
-        <p>Je verzamelt de voorgeschiedenis, beoordeelt ASA-klasse en luchtweg, bespreekt risico's met de supervisor en bepaalt of PSA door de SPS passend is.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>Eerst kijk je of deze patiënt en deze ingreep samen veilig genoeg zijn. Als er rode vlaggen zijn, gaat de anesthesioloog eerder en duidelijker mee in de beslissing.</p>
+        <h2>Screening bepaalt de veilige route.</h2>
+        <p>Je brengt patiënt, procedure en risico's samen voordat er sedatie wordt gegeven. ASA-klasse, luchtweg, comorbiditeit en overleg met de supervisor bepalen of de SPS-route passend is.</p>
+        <div class="learning-points">
+          <strong>Waar je als starter op let</strong>
+          <ul>
+            <li>Past deze patiënt bij sedatie door de SPS?</li>
+            <li>Zijn luchtweg, ASA en comorbiditeit duidelijk beoordeeld?</li>
+            <li>Wanneer moet je de supervisor vroeg betrekken?</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -107,11 +128,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">02 / Tijdens</p>
-        <h2>Procedurele sedatie vraagt ritme en overzicht.</h2>
-        <p>De SPS geeft hypnotica en analgetica volgens behandelplan, bewaakt het sedatieniveau en blijft vooruitdenken: ademweg, circulatie, comfort en procedureverloop.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>Je stuurt niet alleen op slaap. Je kijkt steeds of de patiënt nog veilig ademt, goed reageert op de procedure en snel geholpen kan worden als de situatie kantelt.</p>
+        <h2>Sedatie is continu bijsturen.</h2>
+        <p>Je werkt met een behandelplan, titraties en observatie. Het doel is niet alleen slaap of comfort, maar een patiënt die veilig door de procedure komt.</p>
+        <div class="learning-points">
+          <strong>Beslissingen tijdens de procedure</strong>
+          <ul>
+            <li>Is het sedatieniveau passend bij dit moment?</li>
+            <li>Blijven ademweg, circulatie en comfort stabiel?</li>
+            <li>Moet het plan worden aangepast aan procedureverloop of patiëntreactie?</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -126,11 +151,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">03 / Bewaking</p>
-        <h2>Meten, kijken, vastleggen.</h2>
-        <p>Bewaking stopt niet bij de procedure. Het handboek beschrijft registratie, monitoring tijdens en na PSA, post-sedatie observatie en ontslagcriteria.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>De monitor geeft cijfers, maar jij ziet het geheel. Pas als bewustzijn, ademhaling, circulatie, pijn en misselijkheid voldoende hersteld zijn, komt ontslag in beeld.</p>
+        <h2>Bewaking is klinisch kijken plus meten.</h2>
+        <p>Monitorwaarden, observatie en verslaglegging horen bij elkaar. Ook na de procedure blijf je beoordelen of herstel, pijn, misselijkheid en ontslagcriteria voldoende zijn.</p>
+        <div class="learning-points">
+          <strong>Controlepunten</strong>
+          <ul>
+            <li>Wat zie je aan ademhaling, bewustzijn en circulatie?</li>
+            <li>Kloppen monitorwaarden met je klinische indruk?</li>
+            <li>Is overdracht of ontslag veilig onderbouwd?</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -145,11 +174,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">04 / Als het verandert</p>
-        <h2>Complicaties zijn een workflow, geen verrassing.</h2>
-        <p>Bij luchtwegproblemen, hypoxie, circulatoire instabiliteit of PONV is het belangrijk dat interventies, hulp inschakelen en verslaglegging helder verlopen.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>Je hoeft niet te wachten tot iets groot wordt. Herkennen, benoemen, handelen en opschalen horen bij hetzelfde patroon.</p>
+        <h2>Vroeg herkennen geeft handelingsruimte.</h2>
+        <p>Bij hypoxie, luchtwegproblemen, circulatoire instabiliteit, pijn of PONV wil je snel patroonherkenning: benoemen, handelen, hulp inschakelen en registreren.</p>
+        <div class="learning-points">
+          <strong>Opschaaldenken</strong>
+          <ul>
+            <li>Wat verandert er als eerste?</li>
+            <li>Welke interventie hoort nu bij deze situatie?</li>
+            <li>Wie moet je wanneer erbij halen?</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -164,11 +197,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">05 / Vakprotocollen</p>
-        <h2>Elke afdeling heeft eigen accenten.</h2>
-        <p>MDL, interventieradiologie, longgeneeskunde, cardiologie, pijngeneeskunde, fertiliteit, gynaecologie, KNO en meer staan als volledige protocollen in de bibliotheek.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>De basis blijft hetzelfde, maar de risico's verschillen per procedure. Daarom kun je per specialisme snel naar afspraken, voorbereiding en bijzonderheden.</p>
+        <h2>Per specialisme verschuift het risico.</h2>
+        <p>MDL, interventieradiologie, longgeneeskunde, cardiologie, pijngeneeskunde, fertiliteit, gynaecologie, KNO en andere specialismen hebben eigen voorbereiding en aandachtspunten.</p>
+        <div class="learning-points">
+          <strong>Gebruik het protocol voor</strong>
+          <ul>
+            <li>procedureverloop en pijnlijke momenten</li>
+            <li>specifieke risico's en complicaties</li>
+            <li>postprocedurele afspraken en overdracht</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -183,11 +220,15 @@
       </div>
       <article class="copy">
         <p class="eyebrow">06 / Opleiding</p>
-        <h2>Bekwaam worden maak je zichtbaar.</h2>
-        <p>Het portfolio bundelt praktijkuren, sedaties, KPE's, CBD's, reflectie, producten, 360 graden feedback en EPA-overstijgende leeractiviteiten.</p>
-        <div class="explainer">
-          <strong>In gewone taal</strong>
-          <p>Je laat niet alleen zien wat je hebt gedaan, maar vooral hoe zelfstandig, veilig en reflectief je groeit in de rol van SPS.</p>
+        <h2>Bekwaamheid bouw je zichtbaar op.</h2>
+        <p>Het portfolio verbindt praktijkuren, sedaties, KPE's, CBD's, reflectie, producten, 360 graden feedback en EPA-overstijgende leeractiviteiten.</p>
+        <div class="learning-points">
+          <strong>Portfolio als leerkompas</strong>
+          <ul>
+            <li>Wat heb je gedaan?</li>
+            <li>Wat kun je zelfstandig en veilig onderbouwen?</li>
+            <li>Waar ligt je volgende leerstap?</li>
+          </ul>
         </div>
       </article>
     </section>
@@ -195,8 +236,8 @@
     <section class="library" id="bibliotheek">
       <div class="section-head">
         <p class="eyebrow">Bibliotheek</p>
-        <h2>Alle hoofdstukken uit het handboek.</h2>
-        <p class="section-lead">Gebruik de knoppen om snel naar een type onderwerp te springen. Elke kaart opent direct het volledige protocol of portfolio-onderdeel.</p>
+        <h2>De inhoud als overzichtelijke hoofdstukken.</h2>
+        <p class="section-lead">Gebruik dit deel als kaart van het hele handboek. Open een hoofdstuk om de onderdelen te zien, of ga naar Naslag wanneer je gericht zoekt.</p>
       </div>
       <div class="library-tools" aria-label="Bibliotheekfilters">
         <button class="filter-btn active" type="button" data-filter="all">Alles</button>
@@ -212,8 +253,8 @@
     <section class="full-handbook" id="volledig">
       <div class="section-head">
         <p class="eyebrow">Volledig handboek</p>
-        <h2>Alles zichtbaar, zonder dat de app zwaar voelt.</h2>
-        <p class="section-lead">Deze weergave laat alle geïntegreerde hoofdonderwerpen en subonderwerpen uit het handboek zien als uitklapbare tekst. Gebruik dit als controle- en naslagstand.</p>
+        <h2>Alle protocoltekst bij elkaar.</h2>
+        <p class="section-lead">Deze stand is bedoeld voor controle en volledig nalezen. Voor leren en snel vinden werkt de scrollroute en Naslag prettiger.</p>
       </div>
       <div class="full-tools">
         <label class="full-search">
@@ -232,8 +273,8 @@
     <section class="search-zone" id="zoeken">
       <div class="section-head">
         <p class="eyebrow">Naslag & zoeken</p>
-        <h2>Vind direct het juiste hoofdstuk, protocol of portfolio-onderdeel.</h2>
-        <p class="section-lead">Kies eerst eventueel een hoofdstuk en zoek daarna binnen dat deel. Zo blijft het handboek snel en overzichtelijk, ook bij korte afkortingen zoals ASA, ERCP of KPE.</p>
+        <h2>Zoek zoals je in de praktijk denkt.</h2>
+        <p class="section-lead">Kies een hoofdstuk, specialisme of afkorting en open direct de volledige kaart. Dit is de snelste route wanneer je tijdens voorbereiding, uitvoering of nabespreking iets moet terugvinden.</p>
       </div>
       <div class="search-workbench">
         <label class="searchbox">
@@ -280,7 +321,7 @@
     </div>
   </dialog>
 
-  <script src="assets/sps-data.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <script src="assets/sps-data.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

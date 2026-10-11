@@ -1,4 +1,4 @@
-const CACHE_NAME = "sps-scroll-world-v5";
+const CACHE_NAME = "sps-scroll-world-v8";
 const ASSETS = [
   "./",
   "./index.html",
