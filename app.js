@@ -7,7 +7,16 @@
   const panels = [...document.querySelectorAll("[data-scene]")];
   const chapterGrid = document.getElementById("chapterGrid");
   const libraryCount = document.getElementById("libraryCount");
+  const fullHandbook = document.getElementById("fullHandbook");
+  const fullHandbookSearch = document.getElementById("fullHandbookSearch");
+  const fullHandbookCount = document.getElementById("fullHandbookCount");
+  const expandFullHandbook = document.getElementById("expandFullHandbook");
+  const collapseFullHandbook = document.getElementById("collapseFullHandbook");
   const searchInput = document.getElementById("searchInput");
+  const chapterSelect = document.getElementById("chapterSelect");
+  const clearSearch = document.getElementById("clearSearch");
+  const searchStatus = document.getElementById("searchStatus");
+  const chapterJump = document.getElementById("chapterJump");
   const results = document.getElementById("results");
   const dialog = document.getElementById("detailDialog");
   const detailContext = document.getElementById("detailContext");
@@ -36,6 +45,8 @@
   let pointerY = 0;
   let libraryFilter = "all";
   let searchFilter = "all";
+  let chapterFilter = "all";
+  let fullQuery = "";
 
   function esc(value) {
     return String(value ?? "").replace(/[&<>"']/g, ch => ({
@@ -174,6 +185,8 @@
     const model = visualModel(visualKind(item));
     if (visualKind(item) === "organization") return model.text;
     const cleaned = cleanSourceText(item.cleanBody || item.body || "")
+      .replace(/\[\[(?:\/?table|image:[^\]]+)\]\]/g, " ")
+      .replace(/\s+\|\|\s+/g, " ")
       .replace(/(?:^|\s)[•>-]\s*/g, " ")
       .replace(/\s+/g, " ")
       .trim();
@@ -182,6 +195,12 @@
     const sentence = firstStop > 48 ? cleaned.slice(0, firstStop + 1) : cleaned;
     const max = 145;
     return sentence.length > max ? `${sentence.slice(0, max).replace(/\s+\S*$/, "")}...` : sentence;
+  }
+
+  function textSizeLabel(chars) {
+    if (!chars) return "0 tekens";
+    if (chars < 1000) return "<1k tekens";
+    return `${Math.round(chars / 1000)}k tekens`;
   }
 
   function chapterCategory(doc, chapter) {
@@ -211,6 +230,36 @@
     if (value === "all") return true;
     if (value === "praktijk") return doc === "praktijk" || target === "portfolio";
     return target === value;
+  }
+
+  function dataEntries() {
+    return Object.entries(window.SPS_DATA || {});
+  }
+
+  function chapterKey(doc, chapterId) {
+    return `${doc}|${chapterId}`;
+  }
+
+  function getChapters() {
+    return dataEntries().flatMap(([doc, chapters]) => chapters.map(chapter => ({
+      doc,
+      id: chapter.id,
+      key: chapterKey(doc, chapter.id),
+      num: chapter.num || "",
+      title: chapter.title || "",
+      label: doc === "praktijk" ? "Opleiding & Portfolio" : `${chapter.num ? chapter.num + " " : ""}${chapter.title}`.trim(),
+      category: chapterCategory(doc, chapter),
+      count: (chapter.subs || []).length
+    })));
+  }
+
+  function selectedChapterLabel() {
+    if (chapterFilter === "all") return "alle hoofdstukken";
+    return getChapters().find(chapter => chapter.key === chapterFilter)?.label || "gekozen hoofdstuk";
+  }
+
+  function matchesChapter(item) {
+    return chapterFilter === "all" || chapterKey(item.doc, item.chapterId) === chapterFilter;
   }
 
   function resize() {
@@ -366,7 +415,42 @@
       html += `<p>${esc(paragraphGroup.join(" "))}</p>`;
       paragraphGroup = [];
     };
-    for (const line of lines) {
+    const closeList = () => {
+      if (list) {
+        html += "</ul>";
+        list = false;
+      }
+    };
+    const renderTable = rows => {
+      if (!rows.length) return "";
+      const maxCols = Math.max(...rows.map(row => row.length));
+      const normalized = rows.map(row => [...row, ...Array(Math.max(0, maxCols - row.length)).fill("")]);
+      return `<div class="doc-table-wrap"><table class="doc-table">${normalized.map((row, rowIndex) => `<tr>${row.map(cell => {
+        const tag = rowIndex === 0 ? "th" : "td";
+        return `<${tag}>${esc(cell)}</${tag}>`;
+      }).join("")}</tr>`).join("")}</table></div>`;
+    };
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      const image = line.match(/^\[\[image:([^\]]+)\]\]$/);
+      if (image) {
+        flushParagraph();
+        closeList();
+        html += `<figure class="doc-image"><img src="${esc(image[1])}" alt="Afbeelding uit het Word-document"><figcaption>Afbeelding uit het Word-document</figcaption></figure>`;
+        continue;
+      }
+      if (line === "[[table]]") {
+        flushParagraph();
+        closeList();
+        const rows = [];
+        index += 1;
+        while (index < lines.length && lines[index] !== "[[/table]]") {
+          rows.push(lines[index].split(/\s+\|\|\s+/).map(cell => cell.trim()));
+          index += 1;
+        }
+        html += renderTable(rows);
+        continue;
+      }
       const bullet = line.match(/^(?:•|>|-)\s*(.*)$/);
       const heading = line.length < 86 && /:$/u.test(line) && !bullet;
       if (bullet) {
@@ -378,16 +462,10 @@
         html += `<li>${esc(bullet[1])}</li>`;
       } else if (heading) {
         flushParagraph();
-        if (list) {
-          html += "</ul>";
-          list = false;
-        }
+        closeList();
         html += `<h3>${esc(line.replace(/:$/, ""))}</h3>`;
       } else {
-        if (list) {
-          html += "</ul>";
-          list = false;
-        }
+        closeList();
         paragraphGroup.push(line);
         if (paragraphGroup.join(" ").length > 520) flushParagraph();
       }
@@ -466,6 +544,48 @@
 
   const items = flattenData();
 
+  function renderChapterSelect() {
+    const chapters = getChapters();
+    chapterSelect.innerHTML = `<option value="all">Alle hoofdstukken</option>` + chapters.map(chapter => (
+      `<option value="${esc(chapter.key)}">${esc(chapter.label)} (${chapter.count})</option>`
+    )).join("");
+  }
+
+  function renderChapterJump() {
+    const chapters = getChapters();
+    const activeChapter = chapterFilter === "all" ? null : chapters.find(chapter => chapter.key === chapterFilter);
+    if (activeChapter) {
+      const scopedItems = items.filter(item => chapterKey(item.doc, item.chapterId) === activeChapter.key);
+      chapterJump.innerHTML = `<div class="chapter-jump-head">
+        <div>
+          <span class="eyebrow">Gekozen hoofdstuk</span>
+          <strong>${esc(activeChapter.label)}</strong>
+        </div>
+        <button class="quick-chip muted" type="button" data-chapter-choice="all">Alle hoofdstukken</button>
+      </div>
+      <div class="chapter-subnav">
+        ${scopedItems.map(item => `<button class="chapter-subnav-item" type="button" data-open="${esc(item.doc)}|${esc(item.chapterId)}|${esc(item.id)}">
+          <span>${esc(item.num)}</span>
+          <strong>${esc(item.title)}</strong>
+        </button>`).join("")}
+      </div>`;
+      return;
+    }
+    chapterJump.innerHTML = `<div class="chapter-jump-head">
+      <div>
+        <span class="eyebrow">Snel naar hoofdstuk</span>
+        <strong>Kies een deel om gericht te zoeken</strong>
+      </div>
+    </div>
+    <div class="chapter-choice-grid">
+      ${chapters.map(chapter => `<button class="chapter-choice ${chapter.category === "protocol" ? "protocol" : ""}" type="button" data-chapter-choice="${esc(chapter.key)}">
+        <span>${esc(chapter.doc === "praktijk" ? "Opleiding" : "Handboek")}</span>
+        <strong>${esc(chapter.label)}</strong>
+        <em>${chapter.count} onderdelen</em>
+      </button>`).join("")}
+    </div>`;
+  }
+
   function openItem(item) {
     detailContext.textContent = item.context;
     detailTitle.textContent = `${item.num ? item.num + " · " : ""}${item.title}`;
@@ -521,7 +641,7 @@
               <p class="eyebrow">${doc === "praktijk" ? "Opleiding" : "Handboek"}</p>
               <h3>${esc(`${chapter.num ? chapter.num + " " : ""}${chapter.title}`)}</h3>
               <p>${esc(topicSummary(first))}</p>
-              <div class="chapter-meta">${subs.length} onderdelen · ${Math.round(subs.reduce((n, sub) => n + (sub.body || "").length, 0) / 1000)}k tekens</div>
+              <div class="chapter-meta">${subs.length} onderdelen · ${textSizeLabel(subs.reduce((n, sub) => n + (sub.body || "").length, 0))}</div>
               <button class="open-section" type="button" data-chapter-open="${esc(chapter.id)}" data-doc="${esc(doc)}">Open eerste onderdeel</button>
             </div>
           </div>
@@ -531,6 +651,77 @@
     }
     chapterGrid.innerHTML = cards.join("") || `<article class="empty-state"><h3>Geen onderdelen in deze selectie.</h3><p>Kies een andere filterknop om het handboek verder te bekijken.</p></article>`;
     libraryCount.textContent = `${visibleChapters} hoofdonderwerpen · ${visibleSubtopics} subonderwerpen`;
+  }
+
+  function fullChapterMatches(chapter, doc, terms) {
+    if (!terms.length) return true;
+    const hay = norm(`${doc} ${chapter.num || ""} ${chapter.title || ""} ${(chapter.subs || []).map(sub => `${sub.num || ""} ${sub.title || ""} ${sub.body || ""}`).join(" ")}`);
+    return terms.every(term => hay.includes(term));
+  }
+
+  function fullSubMatches(sub, chapter, doc, terms) {
+    if (!terms.length) return true;
+    const hay = norm(`${doc} ${chapter.num || ""} ${chapter.title || ""} ${sub.num || ""} ${sub.title || ""} ${sub.body || ""}`);
+    return terms.every(term => hay.includes(term));
+  }
+
+  function renderFullHandbook() {
+    const terms = norm(fullQuery).split(/\s+/).filter(Boolean);
+    const groups = [];
+    let chapterCount = 0;
+    let subCount = 0;
+
+    for (const [doc, chapters] of Object.entries(window.SPS_DATA || {})) {
+      chapters.forEach(chapter => {
+        if (!fullChapterMatches(chapter, doc, terms)) return;
+        const matchingSubs = (chapter.subs || []).filter(sub => fullSubMatches(sub, chapter, doc, terms));
+        if (!matchingSubs.length) return;
+        chapterCount += 1;
+        subCount += matchingSubs.length;
+        const context = doc === "praktijk" ? "Opleiding & Portfolio" : `${chapter.num || ""} ${chapter.title}`.trim();
+        const bodyChars = matchingSubs.reduce((n, sub) => n + (sub.body || "").length, 0);
+        const detailsOpen = terms.length ? " open" : "";
+        groups.push(`<details class="full-chapter"${detailsOpen}>
+          <summary>
+            <span class="full-summary-copy">
+              <span class="eyebrow">${doc === "praktijk" ? "Opleiding" : "Handboek"}</span>
+              <strong>${esc(`${chapter.num ? chapter.num + " " : ""}${chapter.title}`)}</strong>
+            </span>
+            <span class="full-meta">${matchingSubs.length} onderdelen · ${textSizeLabel(bodyChars)}</span>
+          </summary>
+          <div class="full-sublist">
+            ${matchingSubs.map(sub => {
+              const item = {
+                doc,
+                chapterId: chapter.id,
+                id: sub.id,
+                num: sub.num || sub.id,
+                title: sub.title,
+                body: sub.body || "",
+                cleanBody: cleanSourceText(sub.body),
+                context
+              };
+              return `<article class="full-subtopic" id="full-${esc(doc)}-${esc(sub.id).replace(/[^a-zA-Z0-9_-]/g, "-")}">
+                <div class="full-subhead">
+                  ${miniVisualHtml(item)}
+                  <div>
+                    <p class="eyebrow">${esc(context)}</p>
+                    <h3>${esc(`${item.num ? item.num + " · " : ""}${item.title}`)}</h3>
+                  </div>
+                  <button class="open-section full-open" type="button" data-full-open="${esc(doc)}|${esc(chapter.id)}|${esc(sub.id)}">Open kaart</button>
+                </div>
+                <div class="detail-body full-body">
+                  ${item.id === "2.1" && item.chapterId === "2" ? organogramHtml() : textToHtml(item.body)}
+                </div>
+              </article>`;
+            }).join("")}
+          </div>
+        </details>`);
+      });
+    }
+
+    fullHandbook.innerHTML = groups.join("") || `<article class="empty-state"><h3>Geen volledige tekst gevonden.</h3><p>Maak de filterterm breder of wis het veld om alles te tonen.</p></article>`;
+    fullHandbookCount.textContent = `${chapterCount} hoofdonderwerpen · ${subCount} subonderwerpen`;
   }
 
   function highlight(text, terms) {
@@ -553,39 +744,73 @@
     return (start > 0 ? "..." : "") + body.slice(start, start + 230).replace(/\s+/g, " ") + (start + 230 < body.length ? "..." : "");
   }
 
+  function renderBrowseState(scopedItems) {
+    const byChapter = scopedItems.reduce((map, item) => {
+      const key = chapterKey(item.doc, item.chapterId);
+      if (!map.has(key)) map.set(key, { item, rows: [] });
+      map.get(key).rows.push(item);
+      return map;
+    }, new Map());
+    const groups = [...byChapter.values()].slice(0, 12);
+    searchStatus.textContent = `${scopedItems.length} onderdelen beschikbaar in ${selectedChapterLabel()}.`;
+    results.innerHTML = `<article class="empty-state search-help">
+      <h3>Typ een zoekterm of kies een onderdeel.</h3>
+      <p>Gebruik de hoofdstukkeuze om gericht binnen één protocolgroep te zoeken. De sneltermen hierboven vullen direct veelgebruikte termen in.</p>
+    </article>` + groups.map(group => `<article class="browse-group">
+      <div class="browse-group-head">
+        <span class="eyebrow">${esc(group.item.doc === "praktijk" ? "Opleiding" : "Handboek")}</span>
+        <h3>${esc(group.item.context)}</h3>
+      </div>
+      <div class="browse-links">
+        ${group.rows.slice(0, 8).map(item => `<button type="button" data-open="${esc(item.doc)}|${esc(item.chapterId)}|${esc(item.id)}">
+          <span>${esc(item.num)}</span>
+          <strong>${esc(item.title)}</strong>
+        </button>`).join("")}
+      </div>
+    </article>`).join("");
+  }
+
   function search() {
     const rawQuery = searchInput.value.trim();
     const query = norm(rawQuery);
+    const scopedItems = items.filter(item => matchesFilter(searchFilter, itemCategory(item), item.doc) && matchesChapter(item));
     if (!query) {
-      results.innerHTML = `<article class="empty-state"><h3>Typ een zoekterm.</h3><p>Zoek in titel en volledige tekst. Handige termen: ASA, luchtweg, PONV, ERCP, propofol, KPE.</p></article>`;
+      renderBrowseState(scopedItems);
       return;
     }
     const terms = query.split(/\s+/).filter(Boolean);
-    const ranked = items.map(item => {
+    const ranked = scopedItems.map(item => {
       const category = itemCategory(item);
-      if (!matchesFilter(searchFilter, category, item.doc)) return { item, category, score: 0 };
       const hay = norm(`${item.title} ${item.context} ${item.cleanBody}`);
       let score = 0;
       terms.forEach(term => {
-        if (norm(item.title).includes(term)) score += 10;
-        if (norm(item.context).includes(term)) score += 4;
+        if (norm(item.title).includes(term)) score += 14;
+        if (norm(item.context).includes(term)) score += 6;
+        if (norm(item.num).includes(term)) score += 8;
         const hits = hay.split(term).length - 1;
         score += hits;
       });
-      return { item, category, score };
-    }).filter(row => row.score > 0).sort((a, b) => b.score - a.score).slice(0, 18);
+      const hitCount = terms.reduce((n, term) => n + Math.max(0, hay.split(term).length - 1), 0);
+      return { item, category, score, hitCount };
+    }).filter(row => row.score > 0).sort((a, b) => b.score - a.score).slice(0, 40);
 
     if (!ranked.length) {
+      searchStatus.textContent = `Geen resultaten binnen ${selectedChapterLabel()}.`;
       results.innerHTML = `<article class="empty-state"><h3>Niets gevonden voor "${esc(rawQuery)}".</h3><p>Probeer een bredere term, een afkorting of zet de zoekfilter terug naar Alles.</p></article>`;
       return;
     }
 
-    results.innerHTML = `<div class="result-summary">${ranked.length} resultaten · ${esc(filterLabel(searchFilter))}</div>` + ranked.map(({ item, category }) => `<article class="result-card" role="button" tabindex="0" data-open="${esc(item.doc)}|${esc(item.chapterId)}|${esc(item.id)}">
+    searchStatus.textContent = `${ranked.length} resultaten voor "${rawQuery}" binnen ${selectedChapterLabel()}.`;
+    results.innerHTML = `<div class="result-summary">${ranked.length} resultaten · ${esc(filterLabel(searchFilter))}</div>` + ranked.map(({ item, category, hitCount }) => `<article class="result-card" role="button" tabindex="0" data-open="${esc(item.doc)}|${esc(item.chapterId)}|${esc(item.id)}">
       ${miniVisualHtml(item)}
       <div class="result-copy">
         <p class="eyebrow">${esc(item.context)} · ${esc(filterLabel(category))}</p>
         <h3>${highlight(`${item.num ? item.num + " · " : ""}${item.title}`, terms)}</h3>
         <p>${highlight(snippet(item.cleanBody, terms), terms)}</p>
+        <div class="result-meta">
+          <span>${hitCount || 1} treffers</span>
+          <span>Open volledige kaart</span>
+        </div>
       </div>
     </article>`).join("");
   }
@@ -603,6 +828,38 @@
 
   closeDialog.addEventListener("click", () => dialog.close());
   searchInput.addEventListener("input", search);
+  chapterSelect.addEventListener("change", () => {
+    chapterFilter = chapterSelect.value;
+    renderChapterJump();
+    search();
+  });
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    chapterFilter = "all";
+    chapterSelect.value = "all";
+    searchFilter = "all";
+    document.querySelectorAll("[data-search-filter]").forEach(btn => btn.classList.toggle("active", btn.dataset.searchFilter === "all"));
+    renderChapterJump();
+    search();
+    searchInput.focus();
+  });
+  document.querySelectorAll("[data-quick-search]").forEach(button => {
+    button.addEventListener("click", () => {
+      searchInput.value = button.dataset.quickSearch;
+      search();
+      searchInput.focus();
+    });
+  });
+  fullHandbookSearch.addEventListener("input", () => {
+    fullQuery = fullHandbookSearch.value.trim();
+    renderFullHandbook();
+  });
+  expandFullHandbook.addEventListener("click", () => {
+    fullHandbook.querySelectorAll("details").forEach(details => details.open = true);
+  });
+  collapseFullHandbook.addEventListener("click", () => {
+    fullHandbook.querySelectorAll("details").forEach(details => details.open = false);
+  });
 
   document.querySelectorAll("[data-filter]").forEach(button => {
     button.addEventListener("click", () => {
@@ -624,6 +881,15 @@
     const chip = event.target.closest("[data-item]");
     const chapter = event.target.closest("[data-chapter-open]");
     const result = event.target.closest("[data-open]");
+    const fullOpen = event.target.closest("[data-full-open]");
+    const chapterChoice = event.target.closest("[data-chapter-choice]");
+    if (chapterChoice) {
+      chapterFilter = chapterChoice.dataset.chapterChoice;
+      chapterSelect.value = chapterFilter;
+      renderChapterJump();
+      search();
+      searchInput.focus();
+    }
     if (chip) {
       const item = findItem(chip.dataset.doc, chip.dataset.chapter, chip.dataset.item);
       if (item) openItem(item);
@@ -637,6 +903,11 @@
       const item = findItem(doc, chapterId, itemId);
       if (item) openItem(item);
     }
+    if (fullOpen) {
+      const [doc, chapterId, itemId] = fullOpen.dataset.fullOpen.split("|");
+      const item = findItem(doc, chapterId, itemId);
+      if (item) openItem(item);
+    }
   });
 
   document.addEventListener("keydown", event => {
@@ -647,9 +918,16 @@
   });
 
   renderChapters();
+  renderChapterSelect();
+  renderChapterJump();
+  renderFullHandbook();
   search();
   resize();
   onScroll();
   if (reduced) drawWorld();
   else requestAnimationFrame(tick);
+
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+  }
 })();

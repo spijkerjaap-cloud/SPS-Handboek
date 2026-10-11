@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e9dcc8">
   <title>SPS Scroll World</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <canvas id="worldCanvas" aria-hidden="true"></canvas>
@@ -22,7 +24,8 @@
     <nav class="topnav" aria-label="Hoofdroute">
       <a href="#route">Route</a>
       <a href="#bibliotheek">Bibliotheek</a>
-      <a href="#zoeken">Zoeken</a>
+      <a href="#volledig">Volledig</a>
+      <a href="#zoeken">Naslag</a>
     </nav>
   </header>
 
@@ -44,7 +47,7 @@
         <p>De inhoud uit je handboek is omgebouwd naar een rustige scrollreis: eerst begrijpen, dan verdiepen, daarna snel terugvinden in de volledige protocollen.</p>
         <div class="hero-actions">
           <a class="button primary" href="#route">Start de route</a>
-          <a class="button" href="#zoeken">Zoek protocol</a>
+        <a class="button" href="#zoeken">Open naslag</a>
         </div>
       </div>
       <div class="scene-card large" aria-label="Klei-matte behandelkamer met SPS, monitor en patiënt">
@@ -59,6 +62,20 @@
     <section class="chapter-intro" id="route">
       <p class="eyebrow">De route</p>
       <h2>Van voorbereiding naar ontslag, met de protocollen eromheen.</h2>
+      <nav class="contents" aria-label="Inhoudsopgave">
+        <h3>Inhoudsopgave</h3>
+        <ol>
+          <li><a href="#screening"><span>01</span>Screening<span aria-hidden="true">→</span></a></li>
+          <li><a href="#sedatie"><span>02</span>Procedurele sedatie<span aria-hidden="true">→</span></a></li>
+          <li><a href="#bewaking"><span>03</span>Bewaking en ontslag<span aria-hidden="true">→</span></a></li>
+          <li><a href="#complicaties"><span>04</span>Complicaties<span aria-hidden="true">→</span></a></li>
+          <li><a href="#specialismen"><span>05</span>Vakprotocollen<span aria-hidden="true">→</span></a></li>
+          <li><a href="#portfolio"><span>06</span>Opleiding en portfolio<span aria-hidden="true">→</span></a></li>
+          <li><a href="#bibliotheek"><span>07</span>Bibliotheek<span aria-hidden="true">→</span></a></li>
+          <li><a href="#volledig"><span>08</span>Volledig handboek<span aria-hidden="true">→</span></a></li>
+          <li><a href="#zoeken"><span>09</span>Naslag en zoeken<span aria-hidden="true">→</span></a></li>
+        </ol>
+      </nav>
     </section>
 
     <section class="panel" id="screening" data-scene="1">
@@ -192,21 +209,61 @@
       <div id="chapterGrid" class="chapter-grid"></div>
     </section>
 
+    <section class="full-handbook" id="volledig">
+      <div class="section-head">
+        <p class="eyebrow">Volledig handboek</p>
+        <h2>Alles zichtbaar, zonder dat de app zwaar voelt.</h2>
+        <p class="section-lead">Deze weergave laat alle geïntegreerde hoofdonderwerpen en subonderwerpen uit het handboek zien als uitklapbare tekst. Gebruik dit als controle- en naslagstand.</p>
+      </div>
+      <div class="full-tools">
+        <label class="full-search">
+          <span>Filter in volledig handboek</span>
+          <input id="fullHandbookSearch" type="search" placeholder="Typ bijvoorbeeld: propofol, complicatie, KPE, stage, supervisor">
+        </label>
+        <div class="full-actions">
+          <button class="filter-btn" type="button" id="expandFullHandbook">Alles open</button>
+          <button class="filter-btn" type="button" id="collapseFullHandbook">Alles dicht</button>
+          <span id="fullHandbookCount" class="library-count"></span>
+        </div>
+      </div>
+      <div id="fullHandbook" class="full-list"></div>
+    </section>
+
     <section class="search-zone" id="zoeken">
       <div class="section-head">
-        <p class="eyebrow">Zoeken</p>
-        <h2>Vind snel protocoltekst, bijlage of portfolio-onderdeel.</h2>
+        <p class="eyebrow">Naslag & zoeken</p>
+        <h2>Vind direct het juiste hoofdstuk, protocol of portfolio-onderdeel.</h2>
+        <p class="section-lead">Kies eerst eventueel een hoofdstuk en zoek daarna binnen dat deel. Zo blijft het handboek snel en overzichtelijk, ook bij korte afkortingen zoals ASA, ERCP of KPE.</p>
       </div>
-      <label class="searchbox">
-        <span>Zoekterm</span>
-        <input id="searchInput" type="search" placeholder="Bijvoorbeeld: ASA, PONV, ERCP, luchtweg, KPE">
-      </label>
+      <div class="search-workbench">
+        <label class="searchbox">
+          <span>Zoekterm</span>
+          <input id="searchInput" type="search" placeholder="Bijvoorbeeld: ASA, PONV, ERCP, luchtweg, KPE">
+        </label>
+        <label class="chapter-picker">
+          <span>Zoek binnen hoofdstuk</span>
+          <select id="chapterSelect">
+            <option value="all">Alle hoofdstukken</option>
+          </select>
+        </label>
+      </div>
+      <div class="quick-search" aria-label="Snelle zoektermen">
+        <button class="quick-chip" type="button" data-quick-search="ASA">ASA</button>
+        <button class="quick-chip" type="button" data-quick-search="luchtweg">Luchtweg</button>
+        <button class="quick-chip" type="button" data-quick-search="propofol">Propofol</button>
+        <button class="quick-chip" type="button" data-quick-search="PONV">PONV</button>
+        <button class="quick-chip" type="button" data-quick-search="ERCP">ERCP</button>
+        <button class="quick-chip" type="button" data-quick-search="KPE">KPE</button>
+        <button class="quick-chip muted" type="button" id="clearSearch">Wis zoeken</button>
+      </div>
       <div class="search-tools" aria-label="Zoekfilters">
         <button class="filter-btn active" type="button" data-search-filter="all">Alles</button>
         <button class="filter-btn" type="button" data-search-filter="handboek">Handboek</button>
         <button class="filter-btn" type="button" data-search-filter="praktijk">Opleiding</button>
         <button class="filter-btn" type="button" data-search-filter="protocol">Protocollen</button>
       </div>
+      <div id="searchStatus" class="search-status"></div>
+      <div id="chapterJump" class="chapter-jump" aria-label="Hoofdstukken snel kiezen"></div>
       <div id="results" class="results"></div>
     </section>
   </main>
@@ -223,7 +280,7 @@
     </div>
   </dialog>
 
-  <script src="assets/sps-data.js"></script>
-  <script src="app.js"></script>
+  <script src="assets/sps-data.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
